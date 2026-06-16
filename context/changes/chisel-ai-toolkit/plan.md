@@ -264,28 +264,28 @@ First-ever publish: confirm the GitHub Package visibility is **public** (first p
 
 #### Automated
 
-- [x] 1.1 `npm pack --dry-run` succeeds and lists exactly the intended files
-- [x] 1.2 `package.json` parses as valid JSON
-- [x] 1.3 Every `skills/*/SKILL.md` frontmatter `name` equals its directory name
+- [x] 1.1 `npm pack --dry-run` succeeds and lists exactly the intended files — 8903dce
+- [x] 1.2 `package.json` parses as valid JSON — 8903dce
+- [x] 1.3 Every `skills/*/SKILL.md` frontmatter `name` equals its directory name — 8903dce
 
 #### Manual
 
-- [ ] 1.4 README accurately describes the public install flow and three install destinations
-- [ ] 1.5 Placeholder content is obviously placeholder and replaceable without installer changes
+- [x] 1.4 README accurately describes the public install flow and three install destinations — 8903dce
+- [x] 1.5 Placeholder content is obviously placeholder and replaceable without installer changes — 8903dce
 
 ### Phase 2: Installer & Uninstaller
 
 #### Automated
 
-- [ ] 2.1 Install round-trip creates skills, session prompt, CLAUDE.md block, and manifest (version matches package.json)
-- [ ] 2.2 Idempotent reinstall produces no duplicate blocks or skill copies
-- [ ] 2.3 Uninstall removes skills, session prompt, sentinel block, and manifest
-- [ ] 2.4 `node --check` passes for install.js and uninstall.js
+- [x] 2.1 Install round-trip creates skills, session prompt, CLAUDE.md block, and manifest (version matches package.json)
+- [x] 2.2 Idempotent reinstall produces no duplicate blocks or skill copies
+- [x] 2.3 Uninstall removes skills, session prompt, sentinel block, and manifest
+- [x] 2.4 `node --check` passes for install.js and uninstall.js
 
 #### Manual
 
-- [ ] 2.5 Install into a consumer with existing CLAUDE.md preserves prior content; uninstall leaves it intact
-- [ ] 2.6 A newly added skill dir is auto-installed with no installer edit
+- [x] 2.5 Install into a consumer with existing CLAUDE.md preserves prior content; uninstall leaves it intact
+- [x] 2.6 A newly added skill dir is auto-installed with no installer edit
 
 ### Phase 3: CI/CD Publish Workflow (semantic-release)
 
