@@ -1,0 +1,30 @@
+{
+  "name": "@xfiveco/chisel-ai-toolkit",
+  "version": "0.0.0",
+  "description": "Chisel team AI artifacts (skills + rules) distributed through GitHub Packages",
+  "license": "MIT",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xfiveco/chisel-ai-toolkit.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "skills/",
+    "rules/",
+    "install.js",
+    "uninstall.js",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "bin": {
+    "ai-toolkit": "./install.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
