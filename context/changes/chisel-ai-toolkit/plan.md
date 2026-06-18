@@ -297,7 +297,7 @@ First-ever publish: confirm the GitHub Package visibility is **public** (first p
 
 #### Manual
 
-- [ ] 3.4 Test merge with a packaged-file change publishes a version visible in the Packages tab
-- [ ] 3.5 Merge touching only non-packaged files produces no release
-- [ ] 3.6 Published package is public in GitHub package settings
-- [ ] 3.7 Re-run on unchanged tree does not 409
+- [x] 3.4 Test merge with a packaged-file change publishes a version visible in the Packages tab — verified: v1.0.0 published, installs cleanly, listed via GitHub API
+- [x] 3.5 Merge touching only non-packaged files produces no release — verified by user
+- [x] 3.6 Published package is public in GitHub package settings — verified: API reports visibility=public
+- [x] 3.7 Re-run on unchanged tree does not 409 — verified by user

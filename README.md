@@ -2,23 +2,35 @@
 
 Versioned Chisel AI artifacts — skills and rules for Claude Code — distributed as a **public** npm package through GitHub Packages. Installing the package drops the bundled skills and rules into a consumer project's Claude Code setup.
 
-This package is **public**: installing it needs no token or authentication, only a one-line registry mapping for the `@rafalpuczel` scope.
+The package is **public** (anyone may read it, no per-package grant needed), but note: **GitHub Packages requires npm clients to present a token with the `read:packages` scope for *every* npm read — including public packages.** This is a registry requirement, not a private-package restriction. A bare `npm install` with no GitHub token fails with `401 … authentication token not provided`; a token missing the scope fails with `403 … token does not match expected scopes`.
 
 ## Install
 
-Add a `.npmrc` to the consumer project (committed, no token) mapping the scope to GitHub Packages:
+### 1. Map the scope (committed `.npmrc`, no token)
+
+Add to the consumer project's `.npmrc` (this line is safe to commit):
 
 ```
 @rafalpuczel:registry=https://npm.pkg.github.com
 ```
 
-Then install:
+### 2. Provide a `read:packages` token (never committed)
+
+Add a token line to your **user** `~/.npmrc` (not the project file):
+
+```
+//npm.pkg.github.com/:_authToken=${GH_PKG_TOKEN}
+```
+
+Get a token with the `gh` CLI (`gh auth refresh -h github.com -s read:packages`, then `gh auth token`) or a classic PAT with `read:packages`. In CI, inject it from a secret — never commit `_authToken`.
+
+### 3. Install
 
 ```
 npm install @rafalpuczel/chisel-ai-toolkit
 ```
 
-A `postinstall` step runs the installer automatically.
+A `postinstall` step runs the installer automatically. (The consumer project must have its own `package.json` so npm reads the project `.npmrc`.)
 
 ## What gets installed
 
