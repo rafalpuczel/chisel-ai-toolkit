@@ -1,9 +1,9 @@
 ---
 change_id: chisel-ai-toolkit
 title: Versioned Chisel AI toolkit package distributed via public GitHub Packages
-status: implementing
+status: implemented
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-18
 archived_at: null
 ---
 
