@@ -19,12 +19,17 @@
     "README.md"
   ],
   "scripts": {
-    "postinstall": "node install.js"
+    "postinstall": "node install.js",
+    "validate:skills": "node scripts/validate-skills.js"
   },
   "bin": {
     "ai-toolkit": "./install.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "semantic-release": "^24.2.0",
+    "@semantic-release/github": "^11.0.0"
   }
 }

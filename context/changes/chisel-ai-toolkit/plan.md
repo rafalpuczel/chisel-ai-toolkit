@@ -277,23 +277,23 @@ First-ever publish: confirm the GitHub Package visibility is **public** (first p
 
 #### Automated
 
-- [x] 2.1 Install round-trip creates skills, session prompt, CLAUDE.md block, and manifest (version matches package.json)
-- [x] 2.2 Idempotent reinstall produces no duplicate blocks or skill copies
-- [x] 2.3 Uninstall removes skills, session prompt, sentinel block, and manifest
-- [x] 2.4 `node --check` passes for install.js and uninstall.js
+- [x] 2.1 Install round-trip creates skills, session prompt, CLAUDE.md block, and manifest (version matches package.json) — a59d978
+- [x] 2.2 Idempotent reinstall produces no duplicate blocks or skill copies — a59d978
+- [x] 2.3 Uninstall removes skills, session prompt, sentinel block, and manifest — a59d978
+- [x] 2.4 `node --check` passes for install.js and uninstall.js — a59d978
 
 #### Manual
 
-- [x] 2.5 Install into a consumer with existing CLAUDE.md preserves prior content; uninstall leaves it intact
-- [x] 2.6 A newly added skill dir is auto-installed with no installer edit
+- [x] 2.5 Install into a consumer with existing CLAUDE.md preserves prior content; uninstall leaves it intact — a59d978
+- [x] 2.6 A newly added skill dir is auto-installed with no installer edit — a59d978
 
 ### Phase 3: CI/CD Publish Workflow (semantic-release)
 
 #### Automated
 
-- [ ] 3.1 Workflow file is valid YAML
-- [ ] 3.2 Validate-job script passes the 3 placeholders and fails a deliberately-broken skill
-- [ ] 3.3 `semantic-release --dry-run` computes a version without error or real publish
+- [x] 3.1 Workflow file is valid YAML
+- [x] 3.2 Validate-job script passes the 3 placeholders and fails a deliberately-broken skill
+- [x] 3.3 `semantic-release --dry-run` computes a version without error or real publish
 
 #### Manual
 

@@ -1,0 +1,74 @@
+name: Publish AI Toolkit
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@xfiveco"
+
+      - name: Validate bundled skills
+        run: node scripts/validate-skills.js
+
+      - name: Verify the package can be packed
+        run: npm pack --dry-run
+
+  publish:
+    needs: validate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@xfiveco"
+
+      - run: npm ci
+
+      - name: Guard — only release if packaged files changed since last release
+        id: guard
+        run: |
+          set -euo pipefail
+          LAST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+          PATHS="skills rules install.js uninstall.js README.md package.json"
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous release tag found — first release, proceeding."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet "$LAST_TAG" HEAD -- $PATHS; then
+            echo "No changes to packaged files since $LAST_TAG — skipping release."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Packaged files changed since $LAST_TAG — proceeding."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Release
+        if: steps.guard.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
