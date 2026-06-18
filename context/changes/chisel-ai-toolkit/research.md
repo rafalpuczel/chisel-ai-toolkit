@@ -3,7 +3,7 @@ date: 2026-06-16T18:00:00+02:00
 researcher: Rafal Puczel
 git_commit: 659928f9978a96cdf5405575ec6d758b370d0bce
 branch: master
-repository: xfiveco/chisel-ai-toolkit
+repository: rafalpuczel/chisel-ai-toolkit
 topic: "Minimal versioned Chisel AI toolkit distributed via public GitHub Packages (M5L4 Model 1)"
 tags: [research, codebase, github-packages, npm, installer, ci-cd]
 status: complete
@@ -17,11 +17,11 @@ last_updated_by: Rafal Puczel
 **Researcher**: Rafal Puczel
 **Git Commit**: 659928f9978a96cdf5405575ec6d758b370d0bce
 **Branch**: master
-**Repository**: xfiveco/chisel-ai-toolkit
+**Repository**: rafalpuczel/chisel-ai-toolkit
 
 ## Research Question
 
-Design a minimal team AI toolkit distributed via **public** GitHub Packages (M5L4 **Model 1** — NOT CodeArtifact). Inputs: the `m5l4-shared-*` and `m5l4-github-packages-*` specs and the `config-templates/m5l4-github-packages-*` templates. Ignore all `codeartifact-*` (Model 2 / AWS) material. Package scope: `@xfiveco`. Artifacts to bundle: 2-3 skills (e.g. `chisel-plan`, `chisel-create-block`, `chisel-setup`) + CLAUDE.md, whose content the user will supply later. Goal: a public package, published on merge to master via `GITHUB_TOKEN`, with the version list visible in the repo's **Packages** tab.
+Design a minimal team AI toolkit distributed via **public** GitHub Packages (M5L4 **Model 1** — NOT CodeArtifact). Inputs: the `m5l4-shared-*` and `m5l4-github-packages-*` specs and the `config-templates/m5l4-github-packages-*` templates. Ignore all `codeartifact-*` (Model 2 / AWS) material. Package scope: `@rafalpuczel`. Artifacts to bundle: 2-3 skills (e.g. `chisel-plan`, `chisel-create-block`, `chisel-setup`) + CLAUDE.md, whose content the user will supply later. Goal: a public package, published on merge to master via `GITHUB_TOKEN`, with the version list visible in the repo's **Packages** tab.
 
 ## Summary
 
@@ -73,7 +73,7 @@ Templates (`.claude/config-templates/`, correct & nearly drop-in):
 - `m5l4-github-packages-publish-ai-toolkit.yml.template:1-47` — validate job (`npm ci`, `test -f skills/code-review/SKILL.md`, `npm pack --dry-run`) + publish job gated `if: github.event_name == 'push'` with `NODE_AUTH_TOKEN: secrets.GITHUB_TOKEN`.
 
 **Required placeholder edits across all templates:**
-- Scope `@twoj-zespol` → `@xfiveco` (package.json:2, install.js:6, uninstall.js:6, consumer.npmrc:1, publish-*.yml:23,38). Package name → `@xfiveco/<name>`.
+- Scope `@twoj-zespol` → `@rafalpuczel` (package.json:2, install.js:6, uninstall.js:6, consumer.npmrc:1, publish-*.yml:23,38). Package name → `@rafalpuczel/<name>`.
 - The hardcoded `PACKAGE_VERSION = "0.1.0"` in install.js:7 must be kept in sync with package.json (see Open Questions — single-source-of-truth risk).
 - The validate-job check `test -f skills/code-review/SKILL.md` (publish-*.yml:26) must change to one of the bundled skill paths (e.g. `skills/chisel-plan/SKILL.md`) once names are fixed — or be made generic (assert ≥1 `skills/*/SKILL.md` exists) so it doesn't depend on a specific skill name.
 
@@ -85,7 +85,7 @@ Source: `H:\localhost\apps\10xdev\course\M5\L4\shared-ai-registry-skille-komendy
 - **Read is the only axis that differs** (:150-154): private packages need a long-lived PAT wherever they install (the `preinstall` `GH_PKG_TOKEN` line :158-163 + Cloudflare token-sync :165, :211). **Public packages need none of it** — anyone installs with just the `.npmrc` scope mapping. Public = fully free (:154).
 - **Versioning guidance** (:196-212): publishing on every merge makes manual version bumps a bottleneck and risks the **409 duplicate-version rejection** (:212). Lesson recommends conventional-commits-driven automation (semantic-release / release-please) **plus** a `git diff` guard that real package files changed between tags, to kill false releases from mis-tagged commits. Manual bump is viable for a minimal first cut but will hit 409 on re-merge without a bump.
 - **Read-token type is a moving target (mid-2026)** (:210) — but **private-only**, so irrelevant to this public package.
-- **The npm scope must equal the GitHub owner** for GitHub Packages. Remote is `git@github.com:xfiveco/chisel-ai-toolkit.git`, owner `xfiveco` (confirmed via `gh repo view`), so `@xfiveco` is correct and consistent.
+- **The npm scope must equal the GitHub owner** for GitHub Packages. Remote is `git@github.com:rafalpuczel/chisel-ai-toolkit.git`, owner `rafalpuczel` (confirmed via `gh repo view`), so `@rafalpuczel` is correct and consistent.
 
 ### D. The harness's M5L4 skills are Model 2 — ignore
 
@@ -115,24 +115,24 @@ Source: `H:\localhost\apps\10xdev\course\M5\L4\shared-ai-registry-skille-komendy
 - **Proposed package layout** (repo root, per spec :22-33, adapted for public; skill/ruleset content TBD by user):
   ```
   chisel-ai-toolkit/
-  ├── package.json            # @xfiveco/<name>, publishConfig→npm.pkg.github.com, files[], postinstall, bin, MIT
+  ├── package.json            # @rafalpuczel/<name>, publishConfig→npm.pkg.github.com, files[], postinstall, bin, MIT
   ├── README.md               # install + what's bundled + uninstall
-  ├── install.js              # from template, scope @xfiveco
-  ├── uninstall.js            # from template, scope @xfiveco
+  ├── install.js              # from template, scope @rafalpuczel
+  ├── uninstall.js            # from template, scope @rafalpuczel
   ├── skills/                 # PLACEHOLDER content until user supplies real skills
   │   ├── chisel-plan/SKILL.md
   │   ├── chisel-create-block/SKILL.md
   │   └── chisel-setup/SKILL.md
   ├── rules/
   │   └── CLAUDE.md           # PLACEHOLDER ruleset until user supplies real content
-  ├── .npmrc                  # @xfiveco:registry=https://npm.pkg.github.com (committed, NO token)
+  ├── .npmrc                  # @rafalpuczel:registry=https://npm.pkg.github.com (committed, NO token)
   └── .github/workflows/
       └── publish-ai-toolkit.yml
   ```
-- **Installer contract** (consumer side): skills → `.claude/skills/<name>/`; ruleset → spliced into consumer `CLAUDE.md` between `<!-- BEGIN @xfiveco/<name> -->` / `<!-- END ... -->`; manifest at `.claude/.ai-toolkit-manifest.json`. Idempotent (re-install replaces managed blocks); postinstall never hard-fails `npm install`.
+- **Installer contract** (consumer side): skills → `.claude/skills/<name>/`; ruleset → spliced into consumer `CLAUDE.md` between `<!-- BEGIN @rafalpuczel/<name> -->` / `<!-- END ... -->`; manifest at `.claude/.ai-toolkit-manifest.json`. Idempotent (re-install replaces managed blocks); postinstall never hard-fails `npm install`.
 - **Content is swap-in-place**: because the installer copies whole `skills/<name>/` dirs and replaces the sentinel block wholesale, supplying real skill/ruleset content later is a pure file drop in `skills/`+`rules/` — no installer changes, no merge logic. The file paths are the only contract.
 - **Publish trigger**: push to `master` → validate → `npm publish` with `GITHUB_TOKEN`. The version list then appears under the repo's **Packages** tab automatically (a published GitHub Packages version is surfaced there by default). For "public" visibility, confirm/flip the package to public in package settings (first publish under a public repo is typically public, but verify).
-- **Bin command**: package.json `bin` maps `ai-toolkit` → `install.js`, enabling `npx @xfiveco/<name>` manual (re)install. Consider a separate `uninstall` invocation path (template `bin` only wires install).
+- **Bin command**: package.json `bin` maps `ai-toolkit` → `install.js`, enabling `npx @rafalpuczel/<name>` manual (re)install. Consider a separate `uninstall` invocation path (template `bin` only wires install).
 
 ## Historical Context (from prior changes)
 

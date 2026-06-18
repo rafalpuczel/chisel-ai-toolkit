@@ -3,7 +3,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const PACKAGE_NAME = "@xfiveco/chisel-ai-toolkit";
+const PACKAGE_NAME = "@rafalpuczel/chisel-ai-toolkit";
 const BEGIN = `<!-- BEGIN ${PACKAGE_NAME} -->`;
 const END = `<!-- END ${PACKAGE_NAME} -->`;
 const MANIFEST = ".ai-toolkit-manifest.json";

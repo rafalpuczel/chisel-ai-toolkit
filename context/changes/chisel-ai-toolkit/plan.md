@@ -2,11 +2,11 @@
 
 ## Overview
 
-Stand up a minimal, public, versioned npm package `@xfiveco/chisel-ai-toolkit` distributed through GitHub Packages (M5L4 **Model 1** — not CodeArtifact). The package bundles auto-discovered Chisel skills plus a `CLAUDE.md` ruleset and a `new-session-prompt.md`, installs them into a consumer project's `.claude/` conventions via an idempotent installer, removes them cleanly via an uninstaller, and publishes automatically on merge to `master` using `semantic-release` and the ephemeral `GITHUB_TOKEN`. Skill/ruleset *content* is supplied by the user later; v1 ships valid placeholders so the structure, installer, and publish pipeline are real and verifiable end-to-end.
+Stand up a minimal, public, versioned npm package `@rafalpuczel/chisel-ai-toolkit` distributed through GitHub Packages (M5L4 **Model 1** — not CodeArtifact). The package bundles auto-discovered Chisel skills plus a `CLAUDE.md` ruleset and a `new-session-prompt.md`, installs them into a consumer project's `.claude/` conventions via an idempotent installer, removes them cleanly via an uninstaller, and publishes automatically on merge to `master` using `semantic-release` and the ephemeral `GITHUB_TOKEN`. Skill/ruleset *content* is supplied by the user later; v1 ships valid placeholders so the structure, installer, and publish pipeline are real and verifiable end-to-end.
 
 ## Current State Analysis
 
-- The repo is **greenfield npm-wise**: no `package.json`, `README.md`, or `.github/workflows/` (research.md §Summary, §A). Remote is `git@github.com:xfiveco/chisel-ai-toolkit.git`, owner `xfiveco` — so the npm scope `@xfiveco` correctly matches the GitHub owner (a hard requirement for GitHub Packages).
+- The repo is **greenfield npm-wise**: no `package.json`, `README.md`, or `.github/workflows/` (research.md §Summary, §A). Remote is `git@github.com:rafalpuczel/chisel-ai-toolkit.git`, owner `rafalpuczel` — so the npm scope `@rafalpuczel` correctly matches the GitHub owner (a hard requirement for GitHub Packages).
 - Five correct, nearly drop-in templates exist under `.claude/config-templates/m5l4-github-packages-*` (package.json, install.js, uninstall.js, consumer.npmrc, publish workflow) — research.md §B has full file:line breakdowns. The build is **assembly + placeholder substitution**, not authoring from scratch.
 - The bundled skills/ruleset **do not exist yet**; they are user-supplied later. v1 ships placeholders at fixed paths (research.md §A).
 - Local PostToolUse hook `.claude/hooks/lint-typecheck.sh:9-15` lints/typechecks **only `.ts/.tsx/.astro`** files — it no-ops for `.js/.json/.md/.yml`, so the CommonJS installer and all package files are unaffected (research.md §E).
@@ -14,12 +14,12 @@ Stand up a minimal, public, versioned npm package `@xfiveco/chisel-ai-toolkit` d
 
 ## Desired End State
 
-A consumer can run `npm install @xfiveco/chisel-ai-toolkit` (with a one-line `.npmrc` scope mapping) and have:
+A consumer can run `npm install @rafalpuczel/chisel-ai-toolkit` (with a one-line `.npmrc` scope mapping) and have:
 - every bundled skill copied into `<project>/.claude/skills/<skill-name>/`, auto-discovered by Claude Code;
 - the toolkit ruleset spliced into the consumer's root `CLAUDE.md` between sentinel markers;
 - a `new-session-prompt.md` placed at `<project>/.claude/new-session-prompt.md`;
 - a manifest at `<project>/.claude/.ai-toolkit-manifest.json` recording version + installed files;
-- `npx @xfiveco/chisel-ai-toolkit` re-runs the install idempotently; an uninstall path reverses all of the above.
+- `npx @rafalpuczel/chisel-ai-toolkit` re-runs the install idempotently; an uninstall path reverses all of the above.
 
 Publishing: every merge to `master` runs validation (generic skill-frontmatter checks + `npm pack --dry-run`), and `semantic-release` computes the next version from conventional commits, publishes to GitHub Packages, and the version list appears under the repo's **Packages** tab. A packaged-files git-diff guard prevents empty/false releases and the 409 duplicate-version error.
 
@@ -64,17 +64,17 @@ Create the repo-root package files and placeholder bundled content so the packag
 
 **File**: `package.json`
 
-**Intent**: Define the public, scoped package that publishes to GitHub Packages and installs itself via `postinstall`. Derived from `m5l4-github-packages-package.json.template` with public-package and `@xfiveco` adaptations.
+**Intent**: Define the public, scoped package that publishes to GitHub Packages and installs itself via `postinstall`. Derived from `m5l4-github-packages-package.json.template` with public-package and `@rafalpuczel` adaptations.
 
-**Contract**: `name: "@xfiveco/chisel-ai-toolkit"`, `version: "0.0.0"` (semantic-release manages real versions), `license: "MIT"`, `publishConfig.registry: "https://npm.pkg.github.com"`, `files: ["skills/","rules/","install.js","uninstall.js","README.md"]`, `scripts.postinstall: "node install.js"`, `bin: { "ai-toolkit": "./install.js" }`, `engines.node: ">=20"`, `type: "commonjs"`. Add `repository` field pointing at the GitHub repo (semantic-release needs it).
+**Contract**: `name: "@rafalpuczel/chisel-ai-toolkit"`, `version: "0.0.0"` (semantic-release manages real versions), `license: "MIT"`, `publishConfig.registry: "https://npm.pkg.github.com"`, `files: ["skills/","rules/","install.js","uninstall.js","README.md"]`, `scripts.postinstall: "node install.js"`, `bin: { "ai-toolkit": "./install.js" }`, `engines.node: ">=20"`, `type: "commonjs"`. Add `repository` field pointing at the GitHub repo (semantic-release needs it).
 
 #### 2. Consumer registry mapping
 
 **File**: `.npmrc`
 
-**Intent**: Map the `@xfiveco` scope to GitHub Packages so this repo (and the documented consumer setup) resolves the scope from the right registry. Committed, **no token** line.
+**Intent**: Map the `@rafalpuczel` scope to GitHub Packages so this repo (and the documented consumer setup) resolves the scope from the right registry. Committed, **no token** line.
 
-**Contract**: single line `@xfiveco:registry=https://npm.pkg.github.com` (from `consumer.npmrc.template:1`, scope changed).
+**Contract**: single line `@rafalpuczel:registry=https://npm.pkg.github.com` (from `consumer.npmrc.template:1`, scope changed).
 
 #### 3. Placeholder skills (auto-discovered)
 
@@ -129,7 +129,7 @@ Create the repo-root package files and placeholder bundled content so the packag
 
 ### Overview
 
-Adapt the template installer/uninstaller for `@xfiveco`, single-source versioning, and the new `new-session-prompt.md` install destination; ensure idempotent install and clean uninstall.
+Adapt the template installer/uninstaller for `@rafalpuczel`, single-source versioning, and the new `new-session-prompt.md` install destination; ensure idempotent install and clean uninstall.
 
 ### Changes Required:
 
@@ -140,7 +140,7 @@ Adapt the template installer/uninstaller for `@xfiveco`, single-source versionin
 **Intent**: Copy bundled skills into the consumer `.claude/skills/`, splice the ruleset into the consumer root `CLAUDE.md` between sentinel markers, place the session prompt as a standalone file, and write a manifest — all idempotently and without ever failing `npm install`. Derived from `install.js.template` with three changes.
 
 **Contract**:
-- `PACKAGE_NAME = "@xfiveco/chisel-ai-toolkit"`; sentinel markers become `<!-- BEGIN @xfiveco/chisel-ai-toolkit -->` / `<!-- END ... -->`.
+- `PACKAGE_NAME = "@rafalpuczel/chisel-ai-toolkit"`; sentinel markers become `<!-- BEGIN @rafalpuczel/chisel-ai-toolkit -->` / `<!-- END ... -->`.
 - **Remove** the hardcoded `PACKAGE_VERSION` constant; read `version` from the bundled `package.json` at runtime (resolve `path.join(__dirname, "package.json")`). Used for the manifest.
 - **Add** a `installSessionPrompt(projectRoot, installedFiles)` step: copy `rules/new-session-prompt.md` → `<projectRoot>/.claude/new-session-prompt.md`, push the relative path into `installedFiles` so the manifest tracks it.
 - Preserve existing behavior: `findProjectRoot()` (`template:12-21`), `copyDir`/`installSkills` glob of `skills/*` (`:37-50`, **keeps auto-discovery**), `applyRulesBlock` sentinel splice (`:52-73`), manifest write (`:75-91`), and the top-level try/catch that only `console.warn`s (`:104-108`).
@@ -152,7 +152,7 @@ Adapt the template installer/uninstaller for `@xfiveco`, single-source versionin
 **Intent**: Reverse every install action using the manifest: remove copied skill dirs and the session-prompt file, strip the sentinel block from the consumer `CLAUDE.md`, and delete the manifest. Derived from `uninstall.js.template` with scope + session-prompt handling.
 
 **Contract**:
-- `PACKAGE_NAME` + sentinel markers updated to `@xfiveco/chisel-ai-toolkit`.
+- `PACKAGE_NAME` + sentinel markers updated to `@rafalpuczel/chisel-ai-toolkit`.
 - Manifest-driven removal loop (`template:26-31`) already deletes tracked files (skills + the new `.claude/new-session-prompt.md`) since they're in `installedFiles`; confirm the session-prompt path is removed by this loop and is **not** skipped like `CLAUDE.md` is.
 - `removeRulesBlock` strips the sentinel block from `CLAUDE.md` (`:11-16, 32-36`); manifest deleted last (`:37`).
 
@@ -160,7 +160,7 @@ Adapt the template installer/uninstaller for `@xfiveco`, single-source versionin
 
 #### Automated Verification:
 
-- Round-trip script against a throwaway dir: set `PROJECT_ROOT=<tmp>`, run `node install.js`, assert `<tmp>/.claude/skills/chisel-plan/SKILL.md`, `<tmp>/.claude/new-session-prompt.md`, the `<!-- BEGIN @xfiveco/chisel-ai-toolkit -->` block in `<tmp>/CLAUDE.md`, and `<tmp>/.claude/.ai-toolkit-manifest.json` all exist; manifest `version` equals `package.json` version.
+- Round-trip script against a throwaway dir: set `PROJECT_ROOT=<tmp>`, run `node install.js`, assert `<tmp>/.claude/skills/chisel-plan/SKILL.md`, `<tmp>/.claude/new-session-prompt.md`, the `<!-- BEGIN @rafalpuczel/chisel-ai-toolkit -->` block in `<tmp>/CLAUDE.md`, and `<tmp>/.claude/.ai-toolkit-manifest.json` all exist; manifest `version` equals `package.json` version.
 - Idempotency: running `node install.js` twice produces no duplicate sentinel blocks and no duplicate skill copies (diff the second run's result against the first).
 - Uninstall: `node uninstall.js` removes all skill dirs, the session-prompt file, the sentinel block, and the manifest — leaving `<tmp>/CLAUDE.md` free of the managed block and no `.ai-toolkit-manifest.json`.
 - `node --check install.js` and `node --check uninstall.js` pass (syntax).
@@ -201,7 +201,7 @@ Add the GitHub Actions workflow that validates the package on every PR/push and 
 - `permissions: contents: write` (semantic-release needs to push tags/release notes) `+ packages: write` (`template:9-11`; note: `contents` upgraded from `read` to `write` for semantic-release tagging).
 - **Validate job** (replaces `test -f skills/code-review/SKILL.md` at `template:26`): a generic step that loops every `skills/*/SKILL.md`, fails if zero exist, and for each asserts (a) the file exists, (b) it has YAML frontmatter containing `name` and `description`, (c) frontmatter `name` equals the directory name. Then `npm pack --dry-run` (`template:27`). Implemented as a small Node script step (no extra deps) given the frontmatter parse.
 - **Git-diff guard step** (publish job, before release): compare the latest release tag to `HEAD` over the `files[]` globs (`skills/ rules/ install.js uninstall.js README.md package.json`); if nothing changed, skip the release. (Note: semantic-release also won't release without a relevant commit; this guard is the belt-and-suspenders the lesson recommends, research.md §C.)
-- **Publish job**: `needs: validate`, `if: github.event_name == 'push'` (`template:31`); checkout with full history (`fetch-depth: 0`, required by semantic-release), `setup-node` with `registry-url: https://npm.pkg.github.com` + `scope: "@xfiveco"` (`template:36-40`), `npm ci`, run `npx semantic-release` with `env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}, NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} }`.
+- **Publish job**: `needs: validate`, `if: github.event_name == 'push'` (`template:31`); checkout with full history (`fetch-depth: 0`, required by semantic-release), `setup-node` with `registry-url: https://npm.pkg.github.com` + `scope: "@rafalpuczel"` (`template:36-40`), `npm ci`, run `npx semantic-release` with `env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}, NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} }`.
 
 ### Success Criteria:
 
@@ -236,7 +236,7 @@ Add the GitHub Actions workflow that validates the package on every PR/push and 
 
 ### Manual Testing Steps:
 
-1. In a scratch consumer repo, add `.npmrc` with the scope line, `npm install @xfiveco/chisel-ai-toolkit` (after first publish), confirm skills appear in `.claude/skills/`, the CLAUDE.md block exists, and `.claude/new-session-prompt.md` is present.
+1. In a scratch consumer repo, add `.npmrc` with the scope line, `npm install @rafalpuczel/chisel-ai-toolkit` (after first publish), confirm skills appear in `.claude/skills/`, the CLAUDE.md block exists, and `.claude/new-session-prompt.md` is present.
 2. Run the package's `node uninstall.js` in that consumer; confirm clean removal.
 3. Merge a `feat:` commit touching a packaged file; confirm a new version in the Packages tab.
 4. Merge a commit touching only `context/**`; confirm no new release.
@@ -291,9 +291,9 @@ First-ever publish: confirm the GitHub Package visibility is **public** (first p
 
 #### Automated
 
-- [x] 3.1 Workflow file is valid YAML
-- [x] 3.2 Validate-job script passes the 3 placeholders and fails a deliberately-broken skill
-- [x] 3.3 `semantic-release --dry-run` computes a version without error or real publish
+- [x] 3.1 Workflow file is valid YAML — dae9220
+- [x] 3.2 Validate-job script passes the 3 placeholders and fails a deliberately-broken skill — dae9220
+- [x] 3.3 `semantic-release --dry-run` computes a version without error or real publish — dae9220
 
 #### Manual
 

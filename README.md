@@ -1,21 +1,21 @@
-# @xfiveco/chisel-ai-toolkit
+# @rafalpuczel/chisel-ai-toolkit
 
 Versioned Chisel AI artifacts — skills and rules for Claude Code — distributed as a **public** npm package through GitHub Packages. Installing the package drops the bundled skills and rules into a consumer project's Claude Code setup.
 
-This package is **public**: installing it needs no token or authentication, only a one-line registry mapping for the `@xfiveco` scope.
+This package is **public**: installing it needs no token or authentication, only a one-line registry mapping for the `@rafalpuczel` scope.
 
 ## Install
 
 Add a `.npmrc` to the consumer project (committed, no token) mapping the scope to GitHub Packages:
 
 ```
-@xfiveco:registry=https://npm.pkg.github.com
+@rafalpuczel:registry=https://npm.pkg.github.com
 ```
 
 Then install:
 
 ```
-npm install @xfiveco/chisel-ai-toolkit
+npm install @rafalpuczel/chisel-ai-toolkit
 ```
 
 A `postinstall` step runs the installer automatically.
@@ -25,7 +25,7 @@ A `postinstall` step runs the installer automatically.
 | Bundled artifact | Installed to (in the consumer project) |
 | --- | --- |
 | `skills/<name>/` (each bundled skill) | `.claude/skills/<name>/` — auto-discovered by Claude Code |
-| `rules/CLAUDE.md` | spliced into the project's root `CLAUDE.md` between `<!-- BEGIN @xfiveco/chisel-ai-toolkit -->` / `<!-- END @xfiveco/chisel-ai-toolkit -->` markers |
+| `rules/CLAUDE.md` | spliced into the project's root `CLAUDE.md` between `<!-- BEGIN @rafalpuczel/chisel-ai-toolkit -->` / `<!-- END @rafalpuczel/chisel-ai-toolkit -->` markers |
 | `rules/new-session-prompt.md` | `.claude/new-session-prompt.md` (standalone file) |
 | (manifest) | `.claude/.ai-toolkit-manifest.json` — records version + installed files |
 
@@ -34,13 +34,13 @@ The install is **idempotent**: re-running updates the managed pieces in place in
 ## Re-install manually
 
 ```
-npx @xfiveco/chisel-ai-toolkit
+npx @rafalpuczel/chisel-ai-toolkit
 ```
 
 ## Uninstall
 
 ```
-node node_modules/@xfiveco/chisel-ai-toolkit/uninstall.js
+node node_modules/@rafalpuczel/chisel-ai-toolkit/uninstall.js
 ```
 
 This removes the installed skills and the session prompt, strips the managed block from the project's `CLAUDE.md`, and deletes the manifest — using the manifest to know exactly what was installed.

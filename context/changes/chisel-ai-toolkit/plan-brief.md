@@ -5,15 +5,15 @@
 
 ## What & Why
 
-Build a minimal, public, versioned npm package `@xfiveco/chisel-ai-toolkit` on GitHub Packages that bundles auto-discovered Chisel skills plus a `CLAUDE.md` ruleset and a `new-session-prompt.md`, with an idempotent installer/uninstaller and automatic publishing on merge to `master`. It replaces copy-paste sharing of AI artifacts with a versioned, single-source-of-truth package the whole team installs the same way.
+Build a minimal, public, versioned npm package `@rafalpuczel/chisel-ai-toolkit` on GitHub Packages that bundles auto-discovered Chisel skills plus a `CLAUDE.md` ruleset and a `new-session-prompt.md`, with an idempotent installer/uninstaller and automatic publishing on merge to `master`. It replaces copy-paste sharing of AI artifacts with a versioned, single-source-of-truth package the whole team installs the same way.
 
 ## Starting Point
 
-The repo is greenfield npm-wise — no `package.json`, README, or workflows. But five correct, nearly drop-in M5L4 templates already exist under `.claude/config-templates/m5l4-github-packages-*`, so the work is assembly + adaptation, not authoring from scratch. The npm scope `@xfiveco` matches the GitHub owner, as GitHub Packages requires.
+The repo is greenfield npm-wise — no `package.json`, README, or workflows. But five correct, nearly drop-in M5L4 templates already exist under `.claude/config-templates/m5l4-github-packages-*`, so the work is assembly + adaptation, not authoring from scratch. The npm scope `@rafalpuczel` matches the GitHub owner, as GitHub Packages requires.
 
 ## Desired End State
 
-A consumer adds a one-line `.npmrc` and runs `npm install @xfiveco/chisel-ai-toolkit`; skills land in `.claude/skills/<name>/` (auto-discovered), the ruleset is spliced into the root `CLAUDE.md`, and a `new-session-prompt.md` is placed in `.claude/`. Every merge to `master` publishes a semantic-release-computed version, visible in the repo's **Packages** tab. Skill/ruleset content is supplied later as a pure file drop — no installer changes.
+A consumer adds a one-line `.npmrc` and runs `npm install @rafalpuczel/chisel-ai-toolkit`; skills land in `.claude/skills/<name>/` (auto-discovered), the ruleset is spliced into the root `CLAUDE.md`, and a `new-session-prompt.md` is placed in `.claude/`. Every merge to `master` publishes a semantic-release-computed version, visible in the repo's **Packages** tab. Skill/ruleset content is supplied later as a pure file drop — no installer changes.
 
 ## Key Decisions Made
 
@@ -36,7 +36,7 @@ A consumer adds a one-line `.npmrc` and runs `npm install @xfiveco/chisel-ai-too
 
 ## Architecture / Approach
 
-Repo-root npm package. `postinstall` runs a CommonJS `install.js` that globs `skills/*` → consumer `.claude/skills/`, splices `rules/CLAUDE.md` into the consumer root `CLAUDE.md` between `<!-- BEGIN/END @xfiveco/chisel-ai-toolkit -->` markers, copies `rules/new-session-prompt.md` → `.claude/new-session-prompt.md`, and writes a manifest. `uninstall.js` reverses all three via the manifest. CI validates every skill's frontmatter generically, then `semantic-release` publishes on merge to `master` using the ephemeral `GITHUB_TOKEN` (`packages: write`), gated by a packaged-files git-diff guard.
+Repo-root npm package. `postinstall` runs a CommonJS `install.js` that globs `skills/*` → consumer `.claude/skills/`, splices `rules/CLAUDE.md` into the consumer root `CLAUDE.md` between `<!-- BEGIN/END @rafalpuczel/chisel-ai-toolkit -->` markers, copies `rules/new-session-prompt.md` → `.claude/new-session-prompt.md`, and writes a manifest. `uninstall.js` reverses all three via the manifest. CI validates every skill's frontmatter generically, then `semantic-release` publishes on merge to `master` using the ephemeral `GITHUB_TOKEN` (`packages: write`), gated by a packaged-files git-diff guard.
 
 ## Phases at a Glance
 
@@ -46,7 +46,7 @@ Repo-root npm package. `postinstall` runs a CommonJS `install.js` that globs `sk
 | 2. Installer & uninstaller | Idempotent install + clean uninstall, session-prompt placement, version-from-package.json | CLAUDE.md splice clobbers existing consumer content |
 | 3. CI/CD publish | Generic validation + semantic-release publish on merge, git-diff guard | semantic-release misconfig → 409 or empty release |
 
-**Prerequisites:** repo pushed to `github.com/xfiveco/chisel-ai-toolkit` (done); `master` is the default branch; ability to set package visibility public after first publish.
+**Prerequisites:** repo pushed to `github.com/rafalpuczel/chisel-ai-toolkit` (done); `master` is the default branch; ability to set package visibility public after first publish.
 **Estimated effort:** ~2-3 sessions across 3 phases.
 
 ## Open Risks & Assumptions
