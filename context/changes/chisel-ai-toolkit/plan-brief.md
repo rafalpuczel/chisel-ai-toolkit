@@ -58,6 +58,7 @@ Repo-root npm package. `postinstall` runs a CommonJS `install.js` that globs `sk
 
 ## Success Criteria (Summary)
 
+- A merge touching only non-packaged files produces no release
 - A consumer installs the package and gets working, auto-discovered skills + a CLAUDE.md rules block + a session prompt; uninstall removes everything cleanly.
 - Merging to `master` publishes a correctly-versioned package visible in the Packages tab; non-packaged-file merges publish nothing.
 - Adding a new skill later requires only dropping a `skills/<name>/SKILL.md` — no installer or CI edits.
