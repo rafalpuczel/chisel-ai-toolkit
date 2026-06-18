@@ -15,6 +15,16 @@ function removeRulesBlock(content) {
   return (content.slice(0, start) + content.slice(end + END.length)).replace(/\n{3,}/g, "\n\n");
 }
 
+function removeIfEmptyDir(dir) {
+  try {
+    if (fs.existsSync(dir) && fs.readdirSync(dir).length === 0) {
+      fs.rmdirSync(dir);
+    }
+  } catch {
+    // best-effort cleanup; ignore
+  }
+}
+
 function main() {
   const projectRoot = process.env.PROJECT_ROOT || process.cwd();
   const manifestPath = path.join(projectRoot, ".claude", MANIFEST);
@@ -34,10 +44,21 @@ function main() {
 
   const rulesPath = path.join(projectRoot, "CLAUDE.md");
   if (fs.existsSync(rulesPath)) {
-    fs.writeFileSync(rulesPath, removeRulesBlock(fs.readFileSync(rulesPath, "utf8")));
+    const stripped = removeRulesBlock(fs.readFileSync(rulesPath, "utf8"));
+    if (stripped.trim() === "") {
+      // CLAUDE.md held only our managed block — remove the now-empty file.
+      fs.rmSync(rulesPath, { force: true });
+    } else {
+      fs.writeFileSync(rulesPath, stripped);
+    }
   }
 
   fs.rmSync(manifestPath, { force: true });
+
+  // Remove now-empty directories we may have created (never touches non-empty ones).
+  removeIfEmptyDir(path.join(projectRoot, ".claude", "skills"));
+  removeIfEmptyDir(path.join(projectRoot, ".claude"));
+
   console.log(`${PACKAGE_NAME}: uninstalled managed files`);
 }
 
