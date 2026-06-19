@@ -27,6 +27,17 @@ npm config set //npm.pkg.github.com/:_authToken "$(gh auth token)" --location=us
 
 That writes a literal token line into your `~/.npmrc`. (Alternatively, create a classic PAT at https://github.com/settings/tokens with the `read:packages` scope and set it the same way.)
 
+**Local development — interactive `npm login`:** if you prefer not to edit `~/.npmrc` by hand, log in to the GitHub Packages registry scoped to `@rafalpuczel`:
+
+```bash
+npm login --scope=@rafalpuczel --auth-type=legacy --registry=https://npm.pkg.github.com
+# Username: your GitHub username
+# Password: a PAT (classic) with the read:packages scope  ← not your GitHub password
+# Email:    any valid email
+```
+
+This stores the token in your user `~/.npmrc` for you. The "password" must be a `read:packages` PAT, not your account password.
+
 **CI — inject from a secret, never commit it.** Write the token line at build time from an environment variable:
 
 ```bash
