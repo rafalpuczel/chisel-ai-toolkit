@@ -16,13 +16,26 @@ Add to the consumer project's `.npmrc` (this line is safe to commit):
 
 ### 2. Provide a `read:packages` token (never committed)
 
-Add a token line to your **user** `~/.npmrc` (not the project file):
+The token goes in your **user** `~/.npmrc` (or is injected in CI) — never in the project `.npmrc`.
 
-```
-//npm.pkg.github.com/:_authToken=${GH_PKG_TOKEN}
+**Local development — quickest path with the `gh` CLI:**
+
+```bash
+gh auth refresh -h github.com -s read:packages
+npm config set //npm.pkg.github.com/:_authToken "$(gh auth token)" --location=user
 ```
 
-Get a token with the `gh` CLI (`gh auth refresh -h github.com -s read:packages`, then `gh auth token`) or a classic PAT with `read:packages`. In CI, inject it from a secret — never commit `_authToken`.
+That writes a literal token line into your `~/.npmrc`. (Alternatively, create a classic PAT at https://github.com/settings/tokens with the `read:packages` scope and set it the same way.)
+
+**CI — inject from a secret, never commit it.** Write the token line at build time from an environment variable:
+
+```bash
+echo "//npm.pkg.github.com/:_authToken=${GH_PKG_TOKEN}" >> .npmrc
+```
+
+The `${GH_PKG_TOKEN}` form is resolved by npm from the environment at install time, so it only works when that variable is actually set (true in CI with a secret; for local dev prefer the literal-token approach above). Inside a same-org GitHub Actions workflow you can use the ephemeral `${{ secrets.GITHUB_TOKEN }}` instead of a long-lived PAT.
+
+> Why a token at all for a *public* package? GitHub Packages requires authentication on every npm read regardless of visibility — see the note at the top. The token only needs `read:packages`; it grants no write access.
 
 ### 3. Install
 
